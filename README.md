@@ -1,6 +1,6 @@
 [![GitHub tag][gh-tag-img]][gh-link]
 
-# How to build a LAMP stack using Software Collections with Puppet
+# Building a SCL-based LAMP stack with Puppet
 
 ## Purpose
 
