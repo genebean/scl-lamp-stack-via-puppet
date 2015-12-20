@@ -45,7 +45,7 @@ class { 'apache':
   mod_dir               => "${scl_httpd}/etc/httpd/conf.modules.d",
   mpm_module            => 'worker',
   pidfile               => '/opt/rh/httpd24/root/var/run/httpd/httpd.pid',
-  ports_file            => "${scl_httpd}/etc/httpd/conf.d/ports.conf",
+  ports_file            => "${scl_httpd}/etc/httpd/conf/ports.conf",
   purge_configs         => true,
   serveradmin           => 'root@localhost',
   servername            => 'demobox.example.com',
@@ -58,6 +58,7 @@ class { 'apache':
 
 class { 'apache::dev': }
 
+class { 'apache::mod::dir': }
 class { 'apache::mod::ssl':
   package_name => 'httpd24-mod_ssl',
 }
