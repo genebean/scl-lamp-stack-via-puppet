@@ -11,10 +11,22 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.network "forwarded_port", guest: 80,   host: 8080
+  config.vm.network "forwarded_port", guest: 443,  host: 8443
 
   config.vm.provision "shell", inline: <<-SHELL1
-    yum -y install git vim ruby-devel gcc gcc-c++
+    yum -y install cmake gcc gcc-c++ git python-devel ruby-devel tree vim
     gem install --no-ri --no-rdoc bundler
+    puppet module install puppetlabs-apache
+    puppet apply /vagrant/site.pp
   SHELL1
+
+  config.vm.provision "shell", inline: 'ln -s /opt/rh/httpd24/root/etc/httpd /root/etc-httpd'
+  config.vm.provision "shell", inline: 'ln -s /opt/rh/httpd24/root/etc/httpd /home/vagrant/etc-httpd'
+
+  config.vm.provision "shell", inline: 'ln -s /opt/rh/httpd24/root/var/www /root/var-www'
+  config.vm.provision "shell", inline: 'ln -s /opt/rh/httpd24/root/var/www /home/vagrant/var-www'
+
+  # Uncomment to for manifest development via Vim
+  #config.vm.provision "shell", path: 'vim-setup.sh'
 
 end
