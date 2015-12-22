@@ -1,5 +1,8 @@
 [![GitHub tag][gh-tag-img]][gh-link]
 
+## 2015-12-21 Release 0.2.1  
+* modified goals on the readme to be a task list with check boxes
+
 ## 2015-12-21 Release 0.2.0  
 * PHP-FPM works now. index.php shows `phpinfo()` on both ports 80 and 443.
 * added two `apache::custom_config` blocks:

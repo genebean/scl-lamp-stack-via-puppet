@@ -16,15 +16,15 @@ doing such a setup.
 
 Once this repo reaches version 1.0.0 it should have, or be able to do, all
 of the following:  
-* Fully install, configure, and manage a SCL-based LAMP stack via Puppet
-* Configure PHP-FPM for use with Apache via a file handler (introduced in
+* [ ] Fully install, configure, and manage a SCL-based LAMP stack via Puppet
+* [x] Configure PHP-FPM for use with Apache via a file handler (introduced in
   Apache 2.4.10)
-* Setup Apache and PHP to utilize a local MariaDB database
-* Redirect all http requests to https in a way that plays nice with the
+* [ ] Setup Apache and PHP to utilize a local MariaDB database
+* [ ] Redirect all http requests to https in a way that plays nice with the
   [letsencrypt.org][le] client and the ["webroot"][webroot] method of
   verification.
-* Configure [Passenger][passenger] for Ruby and Node.js
-* Configure mod_remoteip to support parsing the X-Forwarded-For header
+* [ ] Configure [Passenger][passenger] for Ruby and Node.js
+* [ ] Configure mod_remoteip to support parsing the X-Forwarded-For header
 
 ## Status
 
