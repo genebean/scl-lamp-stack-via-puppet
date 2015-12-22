@@ -26,6 +26,11 @@ of the following:
 * Configure [Passenger][passenger] for Ruby and Node.js
 * Configure mod_remoteip to support parsing the X-Forwarded-For header
 
+## Status
+
+Apache and PHP-FPM are both working. Please see [the change log](CHANGELOG.md)
+in root of this repository for more details.
+
 
 [gh-tag-img]: https://img.shields.io/github/tag/genebean/scl-lamp-stack-via-puppet.svg
 [gh-link]: https://github.com/genebean/scl-lamp-stack-via-puppet
