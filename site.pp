@@ -7,22 +7,6 @@ exec { 'create localhost cert':
   before    => Class['apache'],
 }
 
-package { 'centos-release-scl-rh':
-  ensure => installed,
-}
-
-$packages = [
-  'httpd24',
-  'rh-php56',
-  'scl-utils',
-]
-
-package { $packages:
-  ensure  => installed,
-  before  => Class['apache'],
-  require => Package['centos-release-scl-rh'],
-}
-
 user { 'webmaster':
   ensure => present,
   before => Class['apache'],
@@ -56,11 +40,24 @@ class { 'apache':
   vhost_include_pattern => '*.conf',
 }
 
-class { 'apache::dev': }
+apache::custom_config { 'php-fpm':
+  confdir        => "${scl_httpd}/etc/httpd/conf.modules.d",
+  priority       => false,
+  source         => '/vagrant/php-fpm.conf',
+  verify_command => '/bin/scl enable httpd24 "apachectl -t"',
+  notify         => Service['httpd'],
+}
 
-class { 'apache::mod::dir': }
-class { 'apache::mod::ssl':
-  package_name => 'httpd24-mod_ssl',
+if ($::apache::mod_dir != $::apache::config_dir) {
+  apache::custom_config { 'mod_ssl_fix':
+    name           => 'ssl',
+    confdir        => "${scl_httpd}/etc/httpd/conf.d",
+    priority       => false,
+    content        => "# This file has moved to ${::apache::mod_dir}",
+    verify_command => '/bin/scl enable httpd24 "apachectl -t"',
+    require        => Class['apache::mod::ssl'],
+    notify         => Service['httpd'],
+  }
 }
 
 apache::vhost { 'main-site-nonssl':
@@ -68,8 +65,8 @@ apache::vhost { 'main-site-nonssl':
   ip_based      => true,
   port          => '80',
   docroot       => "${scl_httpd}/var/www/main-site",
-#  docroot_owner => 'webmaster',
-#  docroot_group => 'webmaster',
+  docroot_owner => 'webmaster',
+  docroot_group => 'webmaster',
 }
 
 apache::vhost { 'main-site-ssl':
@@ -77,9 +74,39 @@ apache::vhost { 'main-site-ssl':
   ip_based      => true,
   port          => '443',
   docroot       => "${scl_httpd}/var/www/main-site",
-#  docroot_owner => 'webmaster',
-#  docroot_group => 'webmaster',
+  docroot_owner => 'webmaster',
+  docroot_group => 'webmaster',
   ssl           => true,
   ssl_cert      => '/etc/pki/tls/certs/localhost.crt',
   ssl_key       => '/etc/pki/tls/private/localhost.key',
+}
+
+class { 'apache::dev': }
+class { 'apache::mod::dir': }
+class { 'apache::mod::proxy': }
+class { 'apache::mod::setenvif': }
+class { 'apache::mod::ssl':
+  package_name => 'httpd24-mod_ssl',
+}
+
+class {'phpfpm':
+  package_name    => 'rh-php56-php-fpm',
+  service_name    => 'rh-php56-php-fpm',
+  config_dir      => '/etc/opt/rh/rh-php56',
+  pool_dir        => '/etc/opt/rh/rh-php56/php-fpm.d',
+  pid_file        => '/var/opt/rh/rh-php56/run/php-fpm/php-fpm.pid',
+  restart_command => 'systemctl reload rh-php56-php-fpm',
+}
+
+file { '/opt/rh/httpd24/root/var/www/main-site/index.php':
+  ensure  => file,
+  mode    => '0644',
+  content => '<?php phpinfo(); ?>',
+  require => Apache::Vhost['main-site-ssl'],
+}
+
+file { '/var/log/php-fpm':
+  ensure => directory,
+  mode   => '0700',
+  before => Class['phpfpm'],
 }
