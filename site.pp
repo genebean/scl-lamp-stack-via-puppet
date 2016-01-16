@@ -1,3 +1,5 @@
+$website_owner = 'vagrant'
+
 exec { 'create localhost cert':
   # lint:ignore:80chars
   command   => "/bin/openssl req -new -newkey rsa:4096 -days 3650 -nodes -x509 -sha256 -subj '/CN=domain.com/O=My Company Name LTD./C=US' -keyout /etc/pki/tls/private/localhost.key -out /etc/pki/tls/certs/localhost.crt",
@@ -7,7 +9,7 @@ exec { 'create localhost cert':
   before    => Class['apache'],
 }
 
-user { 'webmaster':
+user { $website_owner:
   ensure => present,
   before => Class['apache'],
 }
@@ -65,8 +67,8 @@ apache::vhost { 'main-site-nonssl':
   ip_based      => true,
   port          => '80',
   docroot       => "${scl_httpd}/var/www/main-site",
-  docroot_owner => 'webmaster',
-  docroot_group => 'webmaster',
+  docroot_owner => $website_owner,
+  docroot_group => $website_owner,
 }
 
 apache::vhost { 'main-site-ssl':
@@ -74,8 +76,8 @@ apache::vhost { 'main-site-ssl':
   ip_based      => true,
   port          => '443',
   docroot       => "${scl_httpd}/var/www/main-site",
-  docroot_owner => 'webmaster',
-  docroot_group => 'webmaster',
+  docroot_owner => $website_owner,
+  docroot_group => $website_owner,
   ssl           => true,
   ssl_cert      => '/etc/pki/tls/certs/localhost.crt',
   ssl_key       => '/etc/pki/tls/private/localhost.key',
@@ -98,11 +100,18 @@ class {'phpfpm':
   restart_command => 'systemctl reload rh-php56-php-fpm',
 }
 
-file { '/opt/rh/httpd24/root/var/www/main-site/index.php':
+file { "${scl_httpd}/var/www/main-site":
+  ensure  => link,
+  target  => '/vagrant/website',
+  force   => true,
+  require => Class['apache'],
+}
+
+file { "${scl_httpd}/var/www/main-site/index.php":
   ensure  => file,
   mode    => '0644',
   content => '<?php phpinfo(); ?>',
-  require => Apache::Vhost['main-site-ssl'],
+  require => File["${scl_httpd}/var/www/main-site"],
 }
 
 file { '/var/log/php-fpm':
