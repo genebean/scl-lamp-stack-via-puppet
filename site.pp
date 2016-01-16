@@ -91,6 +91,12 @@ class { 'apache::mod::ssl':
   package_name => 'httpd24-mod_ssl',
 }
 
+file { '/var/log/php-fpm':
+  ensure => directory,
+  mode   => '0700',
+  before => Class['phpfpm'],
+}
+
 class {'phpfpm':
   package_name    => 'rh-php56-php-fpm',
   service_name    => 'rh-php56-php-fpm',
@@ -114,8 +120,23 @@ file { "${scl_httpd}/var/www/main-site/index.php":
   require => File["${scl_httpd}/var/www/main-site"],
 }
 
-file { '/var/log/php-fpm':
-  ensure => directory,
-  mode   => '0700',
-  before => Class['phpfpm'],
+$php_packages = [
+  rh-php56-php-bcmath,
+  rh-php56-php-cli,
+  rh-php56-php-common,
+  rh-php56-php-devel,
+  rh-php56-php-gd,
+  rh-php56-php-mbstring,
+  rh-php56-php-mysqlnd,
+  rh-php56-php-pdo,
+  rh-php56-php-pear,
+  rh-php56-php-pecl-jsonc,
+  rh-php56-php-pecl-jsonc-devel,
+  rh-php56-php-process,
+  rh-php56-php-xml,
+]
+
+package { $php_packages:
+  ensure => installed,
+  notify => Service['rh-php56-php-fpm'],
 }
