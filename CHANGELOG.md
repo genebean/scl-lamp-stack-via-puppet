@@ -1,5 +1,11 @@
 [![GitHub tag][gh-tag-img]][gh-link]
 
+## 2015-12-21 Release 0.3.0  
+* The folder `website` in this repo is now the default document root
+* The document root is owned by the user and group `vagrant` by default now
+* Added all the PHP packages needed to support [phpMyAdmin][pma]
+* Configured the installation of the PHP packages to restart the php-fpm service
+
 ## 2015-12-21 Release 0.2.1  
 * modified goals on the readme to be a task list with check boxes
 
@@ -25,3 +31,4 @@
 [gh-tag-img]: https://img.shields.io/github/tag/genebean/scl-lamp-stack-via-puppet.svg
 [gh-link]: https://github.com/genebean/scl-lamp-stack-via-puppet
 [mod-phpfpm]: https://forge.puppetlabs.com/Slashbunny/phpfpm
+[pma]: https://www.phpmyadmin.net
