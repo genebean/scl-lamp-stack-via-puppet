@@ -33,6 +33,8 @@ Vagrant.configure(2) do |config|
     cp /vagrant/files/config.inc.php /vagrant/phpmyadmin/config.inc.php
   SHELL2
 
+  config.vm.synced_folder "website/phpmyadmin", "/opt/rh/httpd24/root/var/www/main-site/phpmyadmin", create: true
+
   # Uncomment to for manifest development via Vim
   #config.vm.provision "shell", path: 'vim-setup.sh'
 

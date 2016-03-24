@@ -112,11 +112,6 @@ class { 'phpmyadmin':
   require => Class['apache'],
 }
 
-file { "${scl_httpd}/var/www/main-site/phpmyadmin":
-  ensure => directory,
-  before => File['phpmyadmin'],
-}
-
 file { "${scl_httpd}/var/www/main-site":
   ensure  => link,
   target  => '/vagrant/website',
