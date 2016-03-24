@@ -106,6 +106,17 @@ class {'phpfpm':
   restart_command => 'systemctl reload rh-php56-php-fpm',
 }
 
+class { 'phpmyadmin':
+  path    => "${scl_httpd}/var/www/main-site/phpmyadmin",
+  user    => $website_owner,
+  require => Class['apache'],
+}
+
+file { "${scl_httpd}/var/www/main-site/phpmyadmin":
+  ensure => directory,
+  before => File['phpmyadmin'],
+}
+
 file { "${scl_httpd}/var/www/main-site":
   ensure  => link,
   target  => '/vagrant/website',
