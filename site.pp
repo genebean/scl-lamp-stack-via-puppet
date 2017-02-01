@@ -140,3 +140,14 @@ package { $php_packages:
   ensure => installed,
   notify => Service['rh-php56-php-fpm'],
 }
+
+package { 'mariadb55-mariadb-server':
+  ensure => installed,
+  notify => Service['mariadb55-mariadb.service'],
+}
+
+service { 'mariadb55-mariadb.service':
+  ensure  => running,
+  enable  => true,
+  require => Package['mariadb55-mariadb-server'],
+}
