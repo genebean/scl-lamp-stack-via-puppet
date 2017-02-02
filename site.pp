@@ -6,8 +6,7 @@ $log_formats      = {
 }
 
 exec { 'create localhost cert':
-  # lint:ignore:80chars
-  # lint:ignore:140chars
+  # lint:ignore:80chars lint:ignore:140chars
   command   => "/bin/openssl req -new -newkey rsa:4096 -days 3650 -nodes -x509 -sha256 -subj '/CN=domain.com/O=My Company Name LTD./C=US' -keyout /etc/pki/tls/private/localhost.key -out /etc/pki/tls/certs/localhost.crt",
   # lint:endignore
   creates   => '/etc/pki/tls/certs/localhost.crt',
@@ -24,7 +23,7 @@ if ($apache_user != $website_owner) {
 
 $scl_httpd = '/opt/rh/httpd24/root'
 
-class { 'apache':
+class { '::apache':
   apache_name           => 'httpd24-httpd',
   apache_version        => '2.4',
   conf_dir              => "${scl_httpd}/etc/httpd/conf",
@@ -83,31 +82,31 @@ apache::vhost { 'main-site-ssl':
   ssl_key       => '/etc/pki/tls/private/localhost.key',
 }
 
-class { 'apache::dev': }
+class { '::apache::dev': }
 ::apache::mod { 'access_compat': }
-class { 'apache::mod::alias': }
-class { 'apache::mod::auth_basic': }
-class { 'apache::mod::authn_core': }
-class { 'apache::mod::authn_file': }
-class { 'apache::mod::authz_user': }
+class { '::apache::mod::alias': }
+class { '::apache::mod::auth_basic': }
+class { '::apache::mod::authn_core': }
+class { '::apache::mod::authn_file': }
+class { '::apache::mod::authz_user': }
 ::apache::mod { 'authz_groupfile': }
-class { 'apache::mod::dir': }
-class { 'apache::mod::info':
+class { '::apache::mod::dir': }
+class { '::apache::mod::info':
   allow_from => ['127.0.0.1','::1'],
   info_path  => '/server-info',
 }
-class { 'apache::mod::proxy': }
-class { 'apache::mod::proxy_balancer': }
-class { 'apache::mod::proxy_fcgi': }
-class { 'apache::mod::remoteip':
+class { '::apache::mod::proxy': }
+class { '::apache::mod::proxy_balancer': }
+class { '::apache::mod::proxy_fcgi': }
+class { '::apache::mod::remoteip':
   proxy_ips => [ '127.0.0.1' ],
 }
-class { 'apache::mod::rewrite': }
-class { 'apache::mod::setenvif': }
-class { 'apache::mod::ssl':
+class { '::apache::mod::rewrite': }
+class { '::apache::mod::setenvif': }
+class { '::apache::mod::ssl':
   package_name => 'httpd24-mod_ssl',
 }
-class { 'apache::mod::status':
+class { '::apache::mod::status':
   allow_from  => ['127.0.0.1','::1'],
   status_path => '/server-status',
 }
@@ -138,7 +137,7 @@ file { '/var/opt/rh/rh-php56/lib/php/session':
   require => Class['phpfpm'],
 }
 
-class {'phpfpm':
+class {'::phpfpm':
   package_name    => 'rh-php56-php-fpm',
   service_name    => 'rh-php56-php-fpm',
   config_dir      => '/etc/opt/rh/rh-php56',
