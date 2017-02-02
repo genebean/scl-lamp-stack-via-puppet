@@ -59,6 +59,7 @@ apache::custom_config { 'php-fpm':
   source         => '/vagrant/php-fpm.conf',
   verify_command => '/bin/scl enable httpd24 "apachectl -t"',
   notify         => Service['httpd'],
+  require        => Apache::Vhost['main-site-ssl'],
 }
 
 apache::vhost { 'main-site-nonssl':
@@ -123,11 +124,12 @@ $phpfpm_sock_dirs = [
 ]
 
 file { $phpfpm_sock_dirs:
-  ensure => directory,
-  owner  => $website_owner,
-  group  => $website_group,
-  mode   => '0755',
-  before => Class['phpfpm'],
+  ensure  => directory,
+  owner   => $website_owner,
+  group   => $website_group,
+  mode    => '0755',
+  require => Package['rh-php56-php-fpm'],
+  before  => Service['rh-php56-php-fpm'],
 }
 
 file { '/var/opt/rh/rh-php56/lib/php/session':
