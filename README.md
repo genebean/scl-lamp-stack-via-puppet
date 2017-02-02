@@ -24,11 +24,11 @@ of the following:
   [letsencrypt.org][le] client and the ["webroot"][webroot] method of
   verification.
 * [ ] Configure [Passenger][passenger] for Ruby and Node.js
-* [ ] Configure mod_remoteip to support parsing the X-Forwarded-For header
+* [x] Configure mod_remoteip to support parsing the X-Forwarded-For header
 
 ## Status
 
-Apache and PHP-FPM are both working. Please see [the change log](CHANGELOG.md)
+Apache, PHP-FPM, and MariaDB are all working. Please see [the change log](CHANGELOG.md)
 in root of this repository for more details.
 
 
