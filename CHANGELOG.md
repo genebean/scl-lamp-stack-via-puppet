@@ -1,5 +1,12 @@
 [![GitHub tag][gh-tag-img]][gh-link]
 
+## 2017-02-01 Release 0.4.0  
+* MariaDB is now installed
+* PHP-FPM is now using the event MPM instead of worker
+* Basic testing of the Puppet manifest is now implemented
+* Updated Vagrant box to Puppet 4
+* Fixed a lot of puppet-lint's findings
+
 ## 2015-12-21 Release 0.3.0  
 * The folder `website` in this repo is now the default document root
 * The document root is owned by the user and group `vagrant` by default now
